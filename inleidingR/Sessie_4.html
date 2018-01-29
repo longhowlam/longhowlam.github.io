@@ -115,7 +115,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jaap =<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/Jaap.RDs&quot;</span>)
 
 modelout  =<span class="st"> </span><span class="kw">lm</span>( prijs <span class="op">~</span><span class="st"> </span>kamers              , <span class="dt">data =</span> jaap)
-modelout2 =<span class="st"> </span><span class="kw">lm</span>( prijs <span class="op">~</span>kamers <span class="op">+</span><span class="st"> </span>Oppervlakte , <span class="dt">data =</span> jaap) 
+modelout2 =<span class="st"> </span><span class="kw">lm</span>( prijs <span class="op">~</span><span class="st"> </span>kamers <span class="op">+</span><span class="st"> </span>Oppervlakte , <span class="dt">data =</span> jaap) 
 
 modelout
 modelout2</code></pre></div>
@@ -155,6 +155,50 @@ m4 =<span class="st"> </span><span class="kw">lm</span>(f4, <span class="dt">dat
 <p>Als je verschillende model objecten hebt gemaakt kan je de functie <code>anova</code> gebruiken om ze met elkaar te vergelijken. Dit gebeurt met behulp van F statistics.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">anova</span>(m1,m2, m3)</code></pre></div>
 </div>
+<div id="buckets-linear-constant-en-splines" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Buckets / linear constant en splines</h3>
+<p>Als een input variable niet linear is mbt de target kan je deze niet lineariteit modelleren met buckets (linear constante stukken) of met splines.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(splines)
+
+jaap <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prijs <span class="op">&lt;</span><span class="st"> </span><span class="dv">1000000</span>, Oppervlakte <span class="op">&lt;</span><span class="st"> </span><span class="dv">1500</span>) <span class="op">%&gt;%</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Oppervlakte, <span class="dt">y=</span> prijs)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
+
+mybreaks =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1000</span>, <span class="dt">by =</span> <span class="dv">25</span>)
+jaap =<span class="st"> </span>jaap <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">OppervlakteBucket =</span> <span class="kw">cut</span>(Oppervlakte, <span class="dt">breaks =</span> mybreaks))
+
+
+m1 =<span class="st"> </span><span class="kw">lm</span>(prijs <span class="op">~</span><span class="st"> </span>Oppervlakte, <span class="dt">data =</span> jaap)
+m2 =<span class="st"> </span><span class="kw">lm</span>(prijs <span class="op">~</span><span class="st"> </span>OppervlakteBucket, <span class="dt">data =</span> jaap)
+m3 =<span class="st"> </span><span class="kw">lm</span>(prijs <span class="op">~</span><span class="st"> </span><span class="kw">ns</span>(Oppervlakte,<span class="dv">6</span>), <span class="dt">data =</span> jaap)
+
+<span class="kw">summary</span>(m1)
+<span class="kw">summary</span>(m2)
+<span class="kw">summary</span>(m3)</code></pre></div>
+</div>
+<div id="predicties" class="section level3">
+<h3><span class="header-section-number">1.1.3</span> predicties</h3>
+<p>Met de functie predict kunnen we nieuwe huizen scoren</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">NieuweHuizen =<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">Oppervlakte =</span> <span class="kw">seq</span>(<span class="dv">20</span>, <span class="dv">250</span>, <span class="dt">l =</span> <span class="dv">100</span>)
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+   <span class="dt">OppervlakteBucket =</span> <span class="kw">cut</span>(Oppervlakte, <span class="dt">breaks =</span> mybreaks)
+  )
+
+<span class="co"># Bucket predicties</span>
+prijs2 =<span class="st"> </span><span class="kw">predict</span>(m2, <span class="dt">newdata =</span> NieuweHuizen)
+NieuweHuizen<span class="op">$</span>prijs2 =<span class="st"> </span>prijs2
+
+<span class="kw">ggplot</span>(NieuweHuizen, <span class="kw">aes</span>(<span class="dt">x=</span>Oppervlakte, <span class="dt">y =</span> prijs2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()
+
+<span class="co"># Spline predicties</span>
+prijs3 =<span class="st"> </span><span class="kw">predict</span>(m3, <span class="dt">newdata =</span> NieuweHuizen)
+NieuweHuizen<span class="op">$</span>prijs3 =<span class="st"> </span>prijs3
+
+
+<span class="kw">ggplot</span>(NieuweHuizen, <span class="kw">aes</span>(<span class="dt">x=</span>Oppervlakte, <span class="dt">y =</span> prijs2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span>prijs3), <span class="dt">col=</span><span class="dv">2</span>)</code></pre></div>
+</div>
 </div>
 <div id="splitsen-in-train-en-test" class="section level2">
 <h2><span class="header-section-number">1.2</span> Splitsen in train en test</h2>
@@ -176,6 +220,11 @@ train =<span class="st"> </span><span class="kw">sample</span>(<span class="dv">
 
 TTrain =<span class="st"> </span>myTitan[train,]
 TTest =<span class="st"> </span>myTitan[<span class="op">-</span>train,]</code></pre></div>
+<p>Bovenstaande code was op de oude manier in R een train en test set maken, er is zijn packages die dat voor je doen, een van die packages is <code>rsample</code>. Dit packages is veel algemener en kan ook gebruikt worden voor cross validation splits.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rsample)
+myTitanSplit =<span class="st"> </span><span class="kw">initial_split</span>(myTitan, <span class="dt">prop =</span> <span class="fl">0.8</span>)
+TTrain =<span class="st"> </span><span class="kw">training</span>(myTitanSplit)
+TTest =<span class="st"> </span><span class="kw">testing</span>(myTitanSplit)</code></pre></div>
 </div>
 <div id="logistic-regression" class="section level2">
 <h2><span class="header-section-number">1.3</span> logistic regression</h2>
@@ -229,7 +278,7 @@ xgboost.out =<span class="st"> </span><span class="kw">xgboost</span>(<span clas
 <div id="predictie-en-validatie" class="section level2">
 <h2><span class="header-section-number">1.7</span> predictie en validatie</h2>
 <p>Met een test set kan je bepalen hoe goed een model is. Gebruik het model object van een modelfit om een test set te scoren en de scores met de ware uitkomsten te vergelijken.</p>
-<div id="predicties" class="section level3">
+<div id="predicties-1" class="section level3">
 <h3><span class="header-section-number">1.7.1</span> predicties</h3>
 <p>Voor binaire classificaties is het handig om response kansen uit te rekenen. Voor logistische regressie met <code>glm</code> gebeurt dit niet automatisch</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_GLM =<span class="st"> </span><span class="kw">predict</span>(out.glm, <span class="dt">data =</span> TTest, <span class="dt">type=</span><span class="st">'response'</span>)
