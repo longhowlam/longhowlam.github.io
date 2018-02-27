@@ -126,6 +126,15 @@ modelout<span class="op">$</span>coefficients
 
 <span class="kw">summary</span>(modelout)
 <span class="kw">plot</span>(modelout)</code></pre></div>
+<p>Je ziet dat er wat outliers in de data zitten, die kunnen we nog eens er uit filteren</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jaap =<span class="st"> </span>jaap <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>( prijs <span class="op">&lt;</span><span class="st"> </span><span class="dv">2000000</span> )
+modelout  =<span class="st"> </span><span class="kw">lm</span>( prijs <span class="op">~</span><span class="st"> </span>kamers              , <span class="dt">data =</span> jaap)
+modelout2 =<span class="st"> </span><span class="kw">lm</span>( prijs <span class="op">~</span><span class="st"> </span>kamers <span class="op">+</span><span class="st"> </span>Oppervlakte , <span class="dt">data =</span> jaap) </code></pre></div>
+<p>Iets mooiere diagnostische plots uit <code>lm</code> objecten krijg je met de library <code>ggfortify</code> die weet hoe je lm objecten moet interpreteren voor ggplot. Dan kan je met de functie <code>autoplot</code> uit ggplot mooiere diagnostische plots maken.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggfortify)
+<span class="kw">library</span>(ggplot2)
+
+ggplot2<span class="op">::</span><span class="kw">autoplot</span>(modelout)</code></pre></div>
 <div id="formula-objects" class="section level3">
 <h3><span class="header-section-number">1.1.1</span> formula objects</h3>
 <p>Modellen in R kan je specificeren met zogenaamde de formula objects. Hieronder zie je een aantal voorbeelden.</p>
@@ -157,7 +166,7 @@ m4 =<span class="st"> </span><span class="kw">lm</span>(f4, <span class="dt">dat
 </div>
 <div id="buckets-linear-constant-en-splines" class="section level3">
 <h3><span class="header-section-number">1.1.2</span> Buckets / linear constant en splines</h3>
-<p>Als een input variable niet linear is mbt de target kan je deze niet lineariteit modelleren met buckets (linear constante stukken) of met splines.</p>
+<p>Als een input variable niet linear is m.b.t. de target kan je deze niet-lineariteit modelleren met buckets (linear constante stukken) of met splines.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(splines)
@@ -178,7 +187,7 @@ m3 =<span class="st"> </span><span class="kw">lm</span>(prijs <span class="op">~
 </div>
 <div id="predicties" class="section level3">
 <h3><span class="header-section-number">1.1.3</span> predicties</h3>
-<p>Met de functie predict kunnen we nieuwe huizen scoren</p>
+<p>Met de functie <code>predict</code> kunnen we nieuwe huizen scoren, dat wil zeggen de prijs van andere huizen die niet in de training data set zaten voorspellen.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">NieuweHuizen =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">Oppervlakte =</span> <span class="kw">seq</span>(<span class="dv">20</span>, <span class="dv">250</span>, <span class="dt">l =</span> <span class="dv">100</span>)
   ) <span class="op">%&gt;%</span>
@@ -245,6 +254,9 @@ TTest =<span class="st"> </span><span class="kw">testing</span>(myTitanSplit)</c
 ### larger trees with complexity parameter
 tree.out =<span class="st"> </span><span class="kw">rpart</span>(Survived <span class="op">~</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>Age <span class="op">+</span>Pclass, <span class="dt">data =</span> titanic_train, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">cp=</span><span class="fl">0.005</span>))
 <span class="kw">fancyRpartPlot</span>(tree.out)</code></pre></div>
+<p>Met visNetwork kan je nog een mooiere interactieve decison tree maken.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(visNetwork)
+<span class="kw">visTree</span>(tree.out, <span class="dt">height =</span> <span class="st">&quot;800px&quot;</span>, <span class="dt">nodesPopSize =</span> <span class="ot">TRUE</span>, <span class="dt">minNodeSize =</span> <span class="dv">10</span>, <span class="dt">maxNodeSize =</span> <span class="dv">30</span>)</code></pre></div>
 </div>
 <div id="random-forest-met-ranger" class="section level2">
 <h2><span class="header-section-number">1.5</span> random forest met ranger</h2>
