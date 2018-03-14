@@ -105,7 +105,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li><a href="#importeren-exporteren-van-data"><span class="toc-section-number">4</span> Importeren / exporteren van data</a><ul>
 <li><a href="#inlezen-files"><span class="toc-section-number">4.1</span> Inlezen files</a></li>
-<li><a href="#r-datasets"><span class="toc-section-number">4.2</span> R Datasets</a></li>
+<li><a href="#r-datasets-rds"><span class="toc-section-number">4.2</span> R Datasets (RDS)</a></li>
 <li><a href="#inlezen-uit-een-data-base"><span class="toc-section-number">4.3</span> Inlezen uit een data base</a></li>
 </ul></li>
 <li><a href="#nog-iets-over-geheugen-gebruik"><span class="toc-section-number">5</span> Nog iets over geheugen gebruik</a></li>
@@ -765,7 +765,7 @@ f3 =<span class="st"> </span><span class="cf">function</span>(x)
 <li><code>haven</code> package voor files van SAS, SPSS, Stata</li>
 <li><code>readxl</code> voor Excel files</li>
 </ul>
-<p>R heeft ook standaard functies voor het inzegen van text files, maar ik gebruik vaak de functies uit het package <code>readr</code>. Voor grote files is het veel sneller. En je ziet dan ook een progress bar. In RStudio, kan je de import functies ook aanroepen via de ** Import Dataset ** GUI die het inlezen van data begeleidt.</p>
+<p>R heeft ook standaard functies voor het importeren van text files, maar ik gebruik vaak de functies uit het package <code>readr</code>. Voor grote files is het veel sneller. En je ziet dan ook een progress bar. In RStudio, kan je de import functies ook aanroepen via de ** Import Dataset ** GUI die het inlezen van data begeleidt.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### data met restaurants in Nederland
 <span class="kw">library</span>(readr)
 Restaurants =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/Restaurants.csv&quot;</span>)
@@ -777,8 +777,8 @@ test =<span class="st"> </span><span class="kw">read_excel</span>(
   <span class="dt">range =</span> <span class="st">&quot;D8:F14&quot;</span>
 )</code></pre></div>
 </div>
-<div id="r-datasets" class="section level2">
-<h2><span class="header-section-number">4.2</span> R Datasets</h2>
+<div id="r-datasets-rds" class="section level2">
+<h2><span class="header-section-number">4.2</span> R Datasets (RDS)</h2>
 <p>Je kan R objecten (niet alleen data frames) weg schrijven met de <code>saveRDS</code> functie, en deze kunnen weer ingelezen worden met de <code>readRDS</code> functie. files die je krijgt zijn binaire bestanden, ze kleiner dan tekst files en zijn sneller om weer in R in te lezen.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
 <span class="kw">saveRDS</span>(x, <span class="st">&quot;data/x.RDs&quot;</span>)
