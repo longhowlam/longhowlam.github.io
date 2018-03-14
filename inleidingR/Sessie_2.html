@@ -92,7 +92,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#functies-uit-het-package-stringr"><span class="toc-section-number">4.2</span> functies uit het package stringr</a></li>
 </ul></li>
 <li><a href="#forcats"><span class="toc-section-number">5</span> forcats</a></li>
-<li><a href="#dates-in-r"><span class="toc-section-number">6</span> Dates in R</a></li>
+<li><a href="#dates-and-times-in-r"><span class="toc-section-number">6</span> Dates and times in R</a><ul>
+<li><a href="#durations-en-intervals"><span class="toc-section-number">6.1</span> durations en intervals</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -301,23 +303,23 @@ df6 =<span class="st"> </span>df1 <span class="op">%&gt;%</span><span class="st"
 </div>
 <div id="data-frames-stapelen-of-plakken" class="section level2">
 <h2><span class="header-section-number">2.7</span> data frames stapelen of plakken</h2>
-<p>Soms wil je twee tabellen op elkaar stappelen tot een nieuwe tabel, dat kan je doen met <code>bind_rows</code>. Als je twee tabellen naast elkaar wilt zetten tot een nieuwe tabel, gebruik dan <code>bind_rows</code>.</p>
+<p>Soms wil je twee tabellen op elkaar stappelen tot een nieuwe tabel, dat kan je doen met <code>bind_rows</code>. Als je twee tabellen naast elkaar wilt zetten tot een nieuwe tabel, gebruik dan <code>bind_cols</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## bind_rows
-A =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
-B =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="dv">11</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
+A =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,   <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
+B =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">11</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
 C =<span class="st"> </span><span class="kw">bind_rows</span>(A,B)
 
 ## kolommen die niet in een van de data frames zitten worden aangevuld
 E =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="dv">21</span><span class="op">:</span><span class="dv">25</span>, <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>), <span class="dt">z =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
 
 <span class="kw">bind_rows</span>(A,E)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">A =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
-B =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">q=</span><span class="dv">11</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">q =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">A =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,   <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
+B =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">q =</span> <span class="dv">11</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">q =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
 <span class="kw">bind_cols</span>(A,B)
 
 ## als een van de data frames meer rijen heeft, dan wordt er NIET aangevuld
-A =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
-B =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">q=</span><span class="dv">11</span><span class="op">:</span><span class="dv">17</span>, <span class="dt">q =</span> <span class="kw">rnorm</span>(<span class="dv">7</span>))
+A =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,   <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">5</span>))
+B =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">q =</span> <span class="dv">11</span><span class="op">:</span><span class="dv">17</span>, <span class="dt">q =</span> <span class="kw">rnorm</span>(<span class="dv">7</span>))
 <span class="kw">bind_cols</span>(A,B)</code></pre></div>
 <p><br></p>
 </div>
@@ -377,7 +379,7 @@ df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separ
 <div id="reguliere-expressies" class="section level2">
 <h2><span class="header-section-number">4.1</span> Reguliere expressies</h2>
 <p>Dit is een soort ‘mini’ taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken. Eerst wat dummy character data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mijn nummer is 06-12345678&quot;</span>, <span class="st">&quot;dit is .. een 1628EP postcode test&quot;</span>, <span class="st">&quot;foutje?:  0234XD&quot;</span>, <span class="st">&quot;dit is er nog een 1628 EP&quot;</span>, <span class="st">&quot;en nog een foute 126EP&quot;</span>, <span class="st">&quot;nog een 1234    XX&quot;</span>, <span class="st">&quot;1234eZ en nog 4567PK&quot;</span>, <span class="st">&quot;12345 Aabcde&quot;</span>, <span class="st">&quot;&amp;yfy.&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mijn nummer is 06-12345678&quot;</span>, <span class="st">&quot;dit is .. een 1628EP postcode test&quot;</span>, <span class="st">&quot;foutje?:  0234XD&quot;</span>, <span class="st">&quot;dit is er nog een 1628 EP&quot;</span>, <span class="st">&quot;en nog een foute 126EP&quot;</span>, <span class="st">&quot;nog een 1234    XX&quot;</span>, <span class="st">&quot;1234eZ en nog 4567PK&quot;</span>, <span class="st">&quot;12345 Aabcde&quot;</span>, <span class="st">&quot;Hier staan geen digits&quot;</span>, <span class="st">&quot;&amp;yfy.&quot;</span>)
 test</code></pre></div>
 <p>Een paar voorbeelden van reguliere expressies.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)
@@ -478,27 +480,42 @@ test =<span class="st"> </span>test <span class="op">%&gt;%</span><span class="s
 <p>Herordenen van factor levels, factor levels kunnen een order bevatten, deze kan je maken of veranderen, kan soms nodig zijn bij plotten.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test =<span class="st"> </span>test <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">z2 =</span> <span class="kw">fct_reorder</span>(type, gewicht, mean)
+    <span class="dt">type2 =</span> <span class="kw">fct_reorder</span>(type, gewicht, mean)
   )
 
 <span class="kw">table</span>(test<span class="op">$</span>type)
 <span class="kw">table</span>(test<span class="op">$</span>z2)
 
 <span class="kw">levels</span>(test<span class="op">$</span>type)
-<span class="kw">levels</span>(test<span class="op">$</span>z2)</code></pre></div>
+<span class="kw">levels</span>(test<span class="op">$</span>z2)
+
+### we komen uitvoerig terug op plots in de volgende sessie
+## hier een voorbeeld van het verschil in plaatjes
+
+<span class="kw">library</span>(ggplot2)
+
+test2 =<span class="st"> </span>test <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(type) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>( <span class="dt">gewicht =</span> <span class="kw">mean</span>(gewicht))
+<span class="kw">ggplot</span>(test2, <span class="kw">aes</span>(<span class="dt">x=</span>type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">weight=</span>gewicht))
+
+test2 =<span class="st"> </span>test <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(type2) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>( <span class="dt">gewicht =</span> <span class="kw">mean</span>(gewicht))
+<span class="kw">ggplot</span>(test2, <span class="kw">aes</span>(<span class="dt">x=</span>type2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="kw">aes</span>(<span class="dt">weight=</span>gewicht))</code></pre></div>
 <p><br></p>
 </div>
-<div id="dates-in-r" class="section level1">
-<h1><span class="header-section-number">6</span> Dates in R</h1>
+<div id="dates-and-times-in-r" class="section level1">
+<h1><span class="header-section-number">6</span> Dates and times in R</h1>
 <hr />
-<p>Voor datums (en tijden) in R zijn de packages <code>anytime</code> en <code>lubridate</code> heel handig. Laten we er van uitgaan dat we characters hebben met datums en daar mee willen rekenen. Dan kunnen we de functie <code>anydate</code> uit het anytime package gebruiken.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1973-09-12&quot;</span>, <span class="st">&quot;1980-05-23&quot;</span>, <span class="st">&quot;1981-12-09&quot;</span>)
+<p>Voor datums (en tijden) in R zijn de packages <code>anytime</code> en <code>lubridate</code> heel handig. Laten we er van uitgaan dat we characters hebben met datums en daar mee willen rekenen. Dan kunnen we de functie <code>anydate</code> uit het anytime package gebruiken of een van de <code>ymd</code> functies.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate)
+<span class="kw">library</span>(anytime)
+
+y =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1973-09-12&quot;</span>, <span class="st">&quot;1980-05-23&quot;</span>, <span class="st">&quot;1981-12-09&quot;</span>)
 
 testdata =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">DoB =</span> y)
 
 testdata =<span class="st"> </span>testdata <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">GeboorteDatum =</span> anytime<span class="op">::</span><span class="kw">anydate</span>(DoB)
+    <span class="dt">GeboorteDatum =</span> <span class="kw">anydate</span>(DoB),
+    <span class="dt">GeboorteDatum2 =</span> <span class="kw">ymd</span>(DoB)
   )</code></pre></div>
 <p>De functie <code>anydate</code> parsed diverse character notatie naar een date kolom, de gaat meestal goed :-)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1973/09/12&quot;</span>, <span class="st">&quot;05/23/1980&quot;</span>, <span class="st">&quot;23/05/1980&quot;</span>,<span class="st">&quot;1981-12-09&quot;</span>)
@@ -507,7 +524,7 @@ testdata =<span class="st"> </span><span class="kw">tibble</span>(<span class="d
 
 testdata =<span class="st"> </span>testdata <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">GeboorteDatum =</span> anytime<span class="op">::</span><span class="kw">anydate</span>(DoB)
+    <span class="dt">GeboorteDatum =</span> <span class="kw">anydate</span>(DoB)
   )</code></pre></div>
 <p>Nu we een datum echt als date column in een data frame of tibble hebben kunnen we er mee rekenen.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">testdata =<span class="st"> </span>testdata <span class="op">%&gt;%</span>
@@ -521,6 +538,55 @@ testdata =<span class="st"> </span>testdata <span class="op">%&gt;%</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp =<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/unixtimestamps.csv&quot;</span>)
 tmp<span class="op">$</span>datum =<span class="st"> </span><span class="kw">anydate</span>(tmp<span class="op">$</span>timestamp)
 tmp</code></pre></div>
+<p>Tijdstippen kunnen in R ook worden weergegven met times</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp =<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;2018-01-23&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;12:01:33&quot;</span>, <span class="st">&quot;12:01:38&quot;</span>, <span class="st">&quot;12:01:58&quot;</span>))
+Waarde =<span class="st"> </span><span class="kw">c</span>(<span class="fl">2.4</span>, <span class="fl">5.6</span>, <span class="fl">7.8</span>)
+
+MeetData =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">tmp =</span> tmp, <span class="dt">Waarde=</span> Waarde)
+
+MeetData =<span class="st"> </span>MeetData <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">Meettijdstip =</span> <span class="kw">ymd_hms</span>(tmp)
+  )</code></pre></div>
+<div id="durations-en-intervals" class="section level2">
+<h2><span class="header-section-number">6.1</span> durations en intervals</h2>
+<p>Als je in R twee datums/times van elkaar aftrekt krijg je in R een duration</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MeetData =<span class="st"> </span>MeetData <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">duur =</span> <span class="kw">ymd_hms</span>(<span class="st">&quot;2018-02-01 00:00:00&quot;</span>) <span class="op">-</span><span class="st"> </span><span class="kw">ymd_hms</span>(tmp)
+  )</code></pre></div>
+<p>Ja kan durations ook zelf maken en optellen bij een datum</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">testduur =<span class="st"> </span><span class="kw">dweeks</span>(<span class="dv">3</span>)
+testduur =<span class="st"> </span><span class="kw">dweeks</span>(<span class="fl">3.1</span>)
+<span class="kw">class</span>(testduur)
+
+MeetData =<span class="st"> </span>MeetData <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+   <span class="dt">t2 =</span> Meettijdstip <span class="op">+</span><span class="st"> </span><span class="kw">dyears</span>(<span class="dv">2</span>),
+   <span class="dt">t3 =</span> Meettijdstip <span class="op">+</span><span class="st"> </span><span class="kw">dseconds</span>(<span class="dv">1800</span>),
+   <span class="dt">t4 =</span> Meettijdstip <span class="op">+</span><span class="st"> </span><span class="kw">dweeks</span>(<span class="dv">3</span>)
+   
+  )</code></pre></div>
+<p>In R heb je ook zogenaamde <code>interval</code> objecten, dit is de tijdsperiode tussen een start en eind datum. Hiermee kan je de leeftijd in jaren ook precies uitrekenen.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1973-09-12&quot;</span>, <span class="st">&quot;1973-01-09&quot;</span>)
+
+testdata =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">DoB =</span> y)
+
+testdata =<span class="st"> </span>testdata <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">GeboorteDatum =</span> <span class="kw">anydate</span>(DoB),
+    <span class="dt">interval1 =</span> <span class="kw">interval</span>(GeboorteDatum, <span class="kw">today</span>()),
+    <span class="dt">interval2 =</span> GeboorteDatum <span class="op">%--%</span><span class="st"> </span><span class="kw">today</span>(),
+    <span class="dt">leeftijd =</span> interval1 <span class="op">%/%</span><span class="st"> </span><span class="kw">years</span>(<span class="dv">1</span>)
+  )
+
+testdata
+
+<span class="co"># NB %/% is de integer division in R</span>
+<span class="dv">13</span> <span class="op">/</span><span class="st"> </span><span class="dv">6</span>
+<span class="dv">13</span> <span class="op">%/%</span><span class="st"> </span><span class="dv">6</span></code></pre></div>
+<p>EINDE SESSIE</p>
+</div>
 </div>
 </section>
 
