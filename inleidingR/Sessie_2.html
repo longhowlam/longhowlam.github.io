@@ -258,6 +258,29 @@ out =<span class="st"> </span><span class="kw">filter</span>(
     <span class="dt">MeanDisp =</span> <span class="kw">mean</span>(disp),
     <span class="dt">SD_HP =</span> <span class="kw">sd</span>(hp)
   )</code></pre></div>
+<p>De functie top_n, selecteer de top 4 rijen uit mtcars (op de variable hp).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">top_n</span>(<span class="dv">4</span>, hp)</code></pre></div>
+<div id="window-functions" class="section level3">
+<h3><span class="header-section-number">2.5.1</span> Window functions</h3>
+<p>dplyr ondersteunt zogenaamde SQL ‘window functions’. Bijvoorbeeld bepaal per cyl value the ranking van de variabele hp.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> TMP =<span class="st"> </span>mtcars <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(
+    cyl
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">rank =</span> <span class="kw">rank</span>(<span class="kw">desc</span>(hp), <span class="dt">ties.method =</span> <span class="st">&quot;first&quot;</span>)
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(cyl, hp, rank)</code></pre></div>
+<p>En nu kunnen we ook met de filter functie per cyl waarde de auto nemen met de hoogste hp waarde.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">TMP =<span class="st"> </span>mtcars <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(
+    cyl
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">rank =</span> <span class="kw">rank</span>(<span class="kw">desc</span>(hp), <span class="dt">ties.method =</span> <span class="st">&quot;first&quot;</span>)
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(rank <span class="op">==</span><span class="dv">1</span>)</code></pre></div>
+</div>
 </div>
 <div id="joins" class="section level2">
 <h2><span class="header-section-number">2.6</span> joins</h2>
