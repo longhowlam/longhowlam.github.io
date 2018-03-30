@@ -1056,7 +1056,7 @@ test <span class="op">%&gt;%</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>keuken, <span class="dt">y =</span> n, <span class="dt">fill=</span>plaats)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span>
-<span class="st">   </span><span class="kw">coord_flip</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">coord_flip</span>()</code></pre></div>
 </div>
 <div id="geom_bin2d" class="section level3">
 <h3><span class="header-section-number">5.6.4</span> geom_bin2d</h3>
@@ -1630,9 +1630,10 @@ testData <span class="op">%&gt;%</span><span class="st">  </span><span class="kw
     )
   )
 
-
-<span class="kw">hist</span>(testData<span class="op">$</span>ensemble_prediction, <span class="dt">nclass =</span> <span class="dv">25</span>)
-<span class="kw">hist</span>(testData<span class="op">$</span>glm_prediction, <span class="dt">nclass =</span> <span class="dv">25</span>)
+## first impression of the scores of glm and tree ensemble model
+<span class="kw">ggplot</span>(testData, <span class="kw">aes</span>(ensemble_prediction)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">bins =</span> <span class="dv">50</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(glm_prediction), <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">color =</span> <span class="st">&quot;green&quot;</span>, <span class="dt">bins =</span> <span class="dv">50</span>)
 
 ## if you have a score!!!
 testData <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(percGLM) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">target =</span> <span class="kw">mean</span>(clm))
@@ -1663,8 +1664,8 @@ explainer =<span class="st"> </span><span class="kw">lime</span>(
 ## now we can explain specific cases
 <span class="co"># Let's take two cases with high exposure and low exposure</span>
 explain_cases =<span class="st"> </span><span class="kw">bind_rows</span>( 
-  trainData <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(exposure <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>),
-  trainData <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(exposure <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)
+  trainData <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(exposure <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.6</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>),
+  trainData <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(exposure <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)
 )
 
 <span class="co"># explain the 6 cases in terms of the top 5 features</span>
