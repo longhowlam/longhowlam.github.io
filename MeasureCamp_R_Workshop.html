@@ -1698,15 +1698,22 @@ Groceries =<span class="st"> </span><span class="kw">as</span>(
 )
 Groceries
 
-## Item information
-<span class="kw">itemFrequencyPlot</span>(Groceries, <span class="dt">topN =</span> <span class="dv">35</span>, <span class="dt">cex.names =</span> <span class="fl">0.75</span>)
+## Visual Item information
+<span class="kw">itemFrequencyPlot</span>(Groceries, <span class="dt">topN =</span> <span class="dv">35</span>, <span class="dt">cex.names =</span> <span class="fl">0.75</span>)</code></pre></div>
+<p>Now that we have the groceries transactions in a transaction object we can calculate rules with the a-priori algorithm.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Calculate the rules
+rules =<span class="st"> </span><span class="kw">apriori</span>(Groceries, <span class="dt">parameter =</span> <span class="kw">list</span>(<span class="dt">supp =</span> <span class="fl">0.001</span>, <span class="dt">conf =</span> <span class="fl">0.8</span>))
 
-## Calculate the rules
-rules =<span class="st"> </span><span class="kw">apriori</span>(Groceries, <span class="dt">parameter =</span> <span class="kw">list</span>(<span class="dt">supp =</span> <span class="fl">0.001</span>, <span class="dt">conf =</span> <span class="fl">0.8</span>))</code></pre></div>
+## show some rules
+<span class="kw">inspect</span>(rules[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])
+<span class="kw">inspect</span>( <span class="kw">sort</span>(rules, <span class="dt">by =</span> <span class="st">&quot;support&quot;</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])
+
+## convert  rules set to a data frame
+rulesDF =<span class="st"> </span><span class="kw">DATAFRAME</span>(rules)</code></pre></div>
 <p>Now that you have calculated the rules you can filter the rules by items. So which rules contain certain products?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rules.subset2 =<span class="st"> </span><span class="kw">subset</span>(rules, lhs <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;cereals&quot;</span>, <span class="st">&quot;curd&quot;</span>))
 rules.subset2
-<span class="kw">inspect</span>(<span class="kw">head</span>(rules.subset2,<span class="dt">n=</span><span class="dv">15</span>))</code></pre></div>
+<span class="kw">inspect</span>(<span class="kw">head</span>(rules.subset2, <span class="dt">n=</span><span class="dv">15</span>))</code></pre></div>
 <p>Or if someone has bought already certain items, what are the rules that correspond with those items, and which products can you then recommend?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PersoonA =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">id =</span> <span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>),
