@@ -101,6 +101,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#the-import-functions"><span class="toc-section-number">4.2</span> The Import functions</a></li>
 <li><a href="#rds-files"><span class="toc-section-number">4.3</span> RDS files</a></li>
 <li><a href="#database-connection"><span class="toc-section-number">4.4</span> Database connection</a></li>
+<li><a href="#and-also-have-a-look-at-this-question"><span class="toc-section-number">4.5</span> And also have a look at <a href="https://askubuntu.com/questions/800216/installing-ubuntu-16-04-lts-how-to-install-odbc">this question</a></a></li>
 </ul></li>
 <li><a href="#data-preparation-and-manipulation"><span class="toc-section-number">5</span> Data preparation and manipulation</a><ul>
 <li><a href="#the-dplyr-library"><span class="toc-section-number">5.1</span> The dplyr library</a></li>
@@ -468,6 +469,7 @@ df1 =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">income =</span> x2,
   <span class="dt">age =</span> x3,
   <span class="dt">type =</span> x4
+ <span class="co">#, stringsAsFactors = FALSE</span>
 )
 
 <span class="co"># laat eerste 10 rijen zien</span>
@@ -482,28 +484,17 @@ df2 =<span class="st"> </span>df1
 
 <span class="co"># dimensie en classe</span>
 <span class="kw">dim</span>(df1)
-<span class="kw">class</span>(df1)
+<span class="kw">class</span>(df1)</code></pre></div>
+<p>To get a first impression of the data inside a data.frame you can use the functions <code>summary</code> or <code>skimr</code> (which is in the skimr package that needs to be installed).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mtcars)
+<span class="kw">summary</span>(iris)</code></pre></div>
+<p>install <code>skimr</code> first.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;hadley/colformat&quot;</span>)
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ropenscilabs/skimr&quot;</span>)
 
-<span class="co"># De levels van kolom 'type' uit mydf</span>
-<span class="kw">levels</span>(mydf<span class="op">$</span>type)
-
-### pas op met characters die worden standaard in data.frame naar factors omgezet
-x4
-<span class="kw">class</span>(x4)
-<span class="kw">class</span>(df1<span class="op">$</span>type)
-
-mydf =<span class="st"> </span><span class="kw">data.frame</span>(
-  <span class="dt">kolomnaampj1 =</span> x1, 
-  <span class="dt">income =</span> x2, 
-  <span class="dt">age =</span> x3,
-  <span class="dt">type =</span> x4,
-  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>
-)
-mydf
-
-<span class="kw">class</span>(mydf<span class="op">$</span>type)
-
-## Dit is ook in de Environment viewer te zien</code></pre></div>
+<span class="kw">library</span>(skimr)
+<span class="kw">skim</span>(mtcars)
+<span class="kw">skim</span>(df1)</code></pre></div>
 <p>Just like with matrices, you can use subscripts in data frames to extract certain parts from a data frame.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1[<span class="dv">1</span>,<span class="dv">3</span>]
 df1[<span class="dv">11</span><span class="op">:</span><span class="dv">20</span>,]
@@ -561,7 +552,14 @@ test =<span class="st"> </span><span class="kw">read_excel</span>(
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(odbc)
 <span class="kw">library</span>(DBI)
 <span class="kw">library</span>(dplyr)
-con =<span class="st"> </span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), <span class="st">&quot;my-connector&quot;</span>)</code></pre></div>
+
+con =<span class="st"> </span><span class="kw">dbConnect</span>(odbc<span class="op">::</span><span class="kw">odbc</span>(), <span class="st">&quot;my-connector&quot;</span>)
+
+### get data from the database
+cars =<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">collect</span>()
+
+### write R data frames to a database
+<span class="kw">dbWriteTable</span>(con,<span class="st">&quot;mtcars&quot;</span>, mtcars)</code></pre></div>
 <p>Or you can use a connection string like the examples below, which also works on Windows machines. The first one is a connection to MySQL.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(
   odbc<span class="op">::</span><span class="kw">odbc</span>(),
@@ -600,7 +598,9 @@ cars =<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st"
 
 </div>
 <p>For more details on connecting R to a database see <a href="https://db.rstudio.com/overview">this website</a>.</p>
-<hr />
+</div>
+<div id="and-also-have-a-look-at-this-question" class="section level2">
+<h2><span class="header-section-number">4.5</span> And also have a look at <a href="https://askubuntu.com/questions/800216/installing-ubuntu-16-04-lts-how-to-install-odbc">this question</a></h2>
 </div>
 </div>
 <div id="data-preparation-and-manipulation" class="section level1">
