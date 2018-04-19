@@ -855,7 +855,15 @@ df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separ
 <div id="regular-expressions" class="section level3">
 <h3><span class="header-section-number">5.4.1</span> Regular expressions</h3>
 <p>Regular expressions are a sort of ‘mini’ language to specify character patterns, so that you can search on those patterns in texts. First create some dummy character data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Mijn nummer is 06-12345678&quot;</span>, <span class="st">&quot;dit is .. een 1628EP postcode test&quot;</span>, <span class="st">&quot;foutje?:  0234XD&quot;</span>, <span class="st">&quot;dit is er nog een 1628 EP&quot;</span>, <span class="st">&quot;en nog een foute 126EP&quot;</span>, <span class="st">&quot;nog een 1234    XX&quot;</span>, <span class="st">&quot;1234eZ en nog 4567PK&quot;</span>, <span class="st">&quot;12345 Aabcde&quot;</span>, <span class="st">&quot;&amp;yfy.&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test =<span class="st"> </span><span class="kw">c</span>(
+  <span class="st">&quot;Mijn nummer is 06-12345678&quot;</span>, 
+  <span class="st">&quot;dit is .. een 1628EP postcode test&quot;</span>,
+  <span class="st">&quot;foutje?:  0234XD&quot;</span>, <span class="st">&quot;dit is er nog een 1628 EP&quot;</span>,
+  <span class="st">&quot;en nog een foute 126EP&quot;</span>,
+  <span class="st">&quot;nog een 1234    XX&quot;</span>, 
+  <span class="st">&quot;1234eZ en nog 4567PK&quot;</span>, 
+  <span class="st">&quot;12345 Aabcde&quot;</span>, <span class="st">&quot;&amp;yfy.&quot;</span>
+)
 test</code></pre></div>
 <p>A few examples of regular expressions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)
@@ -1199,6 +1207,7 @@ m2 =<span class="st"> </span>m2 <span class="op">%&gt;%</span>
     <span class="dt">fillOpacity =</span> <span class="dv">1</span>, <span class="dt">popup =</span> ptekst
   )
 m2</code></pre></div>
+<p>popup texts in leaflets can also contain images and animated images. See as an example <a href="http://www.lhldsd.nl/AmsterdamWijkenOverzichtAnimated.html">this leaflet of Amsterdam</a></p>
 </div>
 <div id="visnetwork" class="section level2">
 <h2><span class="header-section-number">5.9</span> visnetwork</h2>
@@ -1215,16 +1224,21 @@ edges =<span class="st"> </span><span class="kw">data.frame</span>(
 
 <span class="kw">visNetwork</span>(nodes, edges)</code></pre></div>
 <p>To alter the appearance of the graph several options can be provided trough the nodes and edges data frames.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nodes =<span class="st"> </span><span class="kw">data.frame</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### NODES data set
+nodes =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,
   <span class="dt">label =</span> <span class="kw">paste</span>(<span class="st">&quot;Node&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>),                                   <span class="co"># labels</span>
   <span class="dt">group =</span> <span class="kw">c</span>(<span class="st">&quot;GrA&quot;</span>, <span class="st">&quot;GrB&quot;</span>),                                       <span class="co"># groups</span>
   <span class="dt">value =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,                                                  <span class="co"># size</span>
-  <span class="dt">shape =</span> <span class="kw">c</span>(<span class="st">&quot;square&quot;</span>, <span class="st">&quot;triangle&quot;</span>, <span class="st">&quot;box&quot;</span>, <span class="st">&quot;circle&quot;</span>, <span class="st">&quot;dot&quot;</span>, <span class="st">&quot;star&quot;</span>, <span class="st">&quot;ellipse&quot;</span>, <span class="st">&quot;database&quot;</span>, <span class="st">&quot;text&quot;</span>, <span class="st">&quot;diamond&quot;</span>),    <span class="co"># shape</span>
+  <span class="dt">shape =</span> <span class="kw">c</span>(
+    <span class="st">&quot;square&quot;</span>, <span class="st">&quot;triangle&quot;</span>, <span class="st">&quot;box&quot;</span>, <span class="st">&quot;circle&quot;</span>,
+    <span class="st">&quot;dot&quot;</span>, <span class="st">&quot;star&quot;</span>, <span class="st">&quot;ellipse&quot;</span>, <span class="st">&quot;database&quot;</span>, <span class="st">&quot;text&quot;</span>, <span class="st">&quot;diamond&quot;</span>
+  ),                                                             <span class="co"># shape</span>
   <span class="dt">title =</span> <span class="kw">paste0</span>(<span class="st">&quot;&lt;p&gt;&lt;b&gt;&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="st">&quot;&lt;/b&gt;&lt;br&gt;Node !&lt;/p&gt;&quot;</span>),           <span class="co"># tooltip</span>
   <span class="dt">color =</span> <span class="kw">c</span>(<span class="st">&quot;darkred&quot;</span>, <span class="st">&quot;grey&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;darkblue&quot;</span>, <span class="st">&quot;purple&quot;</span>),  <span class="co"># color</span>
   <span class="dt">shadow =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>))                    <span class="co"># shadow</span>
 
+### EDGES data set
 edges =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">from =</span> <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="dv">8</span>), <span class="dt">to =</span> <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">8</span>),
   <span class="dt">label =</span> <span class="kw">paste</span>(<span class="st">&quot;Edge&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>),                                    <span class="co"># labels</span>
   <span class="dt">length =</span> <span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">500</span>),                                           <span class="co"># length</span>
@@ -1235,7 +1249,7 @@ edges =<span class="st"> </span><span class="kw">data.frame</span>(<span class="
   <span class="dt">shadow =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>))                          <span class="co"># shadow</span>
 
 <span class="kw">visNetwork</span>(nodes, edges)</code></pre></div>
-<p>Other options can be given via the <code>visnetwork</code> function. For example, highlight nearest:</p>
+<p>Other options can be given via the <code>visnetwork</code> function. For example, highlight nearest and node selection:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nodes =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">15</span>,
   <span class="dt">label =</span> <span class="kw">paste</span>(<span class="st">&quot;Label&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">15</span>),
