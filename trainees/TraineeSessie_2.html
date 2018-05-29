@@ -1020,7 +1020,6 @@ BillyF =<span class="st"> </span><span class="kw">prophet</span>(
   <span class="dt">weekly.seasonality =</span> <span class="ot">TRUE</span> ,
   <span class="dt">yearly.seasonality =</span> <span class="ot">TRUE</span>, 
   <span class="dt">daily.seasonality =</span> <span class="ot">TRUE</span>
-
 )
 
 ## dan aantal dagen vooruit maken waarop je gaat forecastem
@@ -1029,6 +1028,43 @@ forecast =<span class="st"> </span><span class="kw">predict</span>(BillyF, futur
 
 <span class="kw">plot</span>(BillyF, forecast)
 <span class="kw">prophet_plot_components</span>(BillyF, forecast)</code></pre></div>
+<p>Met prohet kan je ook externe regressors toevoegen aan het model. Laten we eens wat KNMI data bekijken.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
+<span class="kw">library</span>(ggplot2)
+
+KNMI_<span class="dv">20180101</span> =<span class="st"> </span><span class="kw">read_csv</span>(
+   <span class="st">&quot;data/KNMI_20180101.txt&quot;</span>, 
+   <span class="dt">col_types =</span> <span class="kw">cols</span>(<span class="dt">YYYYMMDD =</span> <span class="kw">col_date</span>(<span class="dt">format =</span> <span class="st">&quot;%Y%m%d&quot;</span>))
+)
+
+DailyBilly2 =<span class="st"> </span>DailyBilly <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(
+    KNMI_<span class="dv">20180101</span>, 
+    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;ds&quot;</span> =<span class="st"> &quot;YYYYMMDD&quot;</span>)
+  )
+
+## het model moet nog niet gefit worden voordat je de regressor er aan toevoegt.
+BillyF =<span class="st"> </span><span class="kw">prophet</span>(
+  <span class="dt">weekly.seasonality =</span> <span class="ot">TRUE</span> ,
+  <span class="dt">yearly.seasonality =</span> <span class="ot">TRUE</span>, 
+  <span class="dt">daily.seasonality =</span> <span class="ot">TRUE</span>,
+  <span class="dt">fit =</span> <span class="ot">FALSE</span>
+)  <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_regressor</span>(<span class="st">&quot;FHX&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fit.prophet</span>(<span class="dt">df =</span> DailyBilly2)
+
+## voorspel Billy Verkopen voor lage en hoge windwaarden.
+future =<span class="st"> </span><span class="kw">make_future_dataframe</span>(BillyF, <span class="dt">periods =</span> <span class="dv">30</span>)
+future<span class="op">$</span>FHX =<span class="st"> </span><span class="dv">40</span>
+future =<span class="st"> </span>future <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(ds <span class="op">&gt;</span><span class="st"> &quot;2017-10-01&quot;</span>)
+forecast1 =<span class="st"> </span><span class="kw">predict</span>(BillyF, future)
+future<span class="op">$</span>FHX =<span class="st"> </span><span class="dv">120</span>
+forecast2 =<span class="st"> </span><span class="kw">predict</span>(BillyF, future)
+
+### zet de twee voorspellingen uit.
+<span class="kw">ggplot</span>(forecast1, <span class="kw">aes</span>(ds,yhat)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> forecast2, <span class="kw">aes</span>(ds,yhat), <span class="dt">col=</span><span class="dv">2</span>)</code></pre></div>
 </div>
 <div id="the-mlr-package" class="section level1">
 <h1><span class="header-section-number">7</span> The mlr package</h1>
