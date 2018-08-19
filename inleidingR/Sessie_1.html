@@ -570,11 +570,19 @@ df1 =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">kolomnaampj1 =</span> x1,
   <span class="dt">income =</span> x2,
   <span class="dt">age =</span> x3,
-  <span class="dt">type =</span> x4
+  <span class="dt">gender =</span> x4
 )
 
 <span class="co"># laat eerste 10 rijen zien</span>
 <span class="kw">head</span>(df1,<span class="dv">10</span>)</code></pre></div>
+<p><em>Let op!!</em> In de bovenstaande code is <code>x4</code> een character vector, maar in de data frame is column gender een factor data type geworden. Dit is standaard gedran van de functie <code>data.frame</code>. Gebruik het argument <code>stringAsFactors = FALSE</code> om bij het maken van een data frame de character variabelen niet automatisch te converteren naar factor variabelen.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1 =<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">kolomnaampj1 =</span> x1,
+  <span class="dt">income =</span> x2,
+  <span class="dt">age =</span> x3,
+  <span class="dt">gender =</span> x4,
+  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>
+)</code></pre></div>
 <p>De volgende functies kan je gebruiken om wat extra info van een data frame te laten zien.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># laat de namen van de kolommen zien</span>
 <span class="kw">names</span>(df1)
@@ -583,23 +591,19 @@ df1 =<span class="st"> </span><span class="kw">data.frame</span>(
 df2 =<span class="st"> </span>df1
 <span class="kw">names</span>(df2) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>)
 
-<span class="co"># dimensie en classe</span>
+<span class="co"># dimensie en class van een data frame</span>
 <span class="kw">dim</span>(df1)
-<span class="kw">class</span>(df1)
+<span class="kw">class</span>(df1)</code></pre></div>
+<p>Om een eerste indruk te krijgen van wat er in een data.frame zit kan je <code>summary</code> of <code>skimr</code> gebruiken</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mtcars)
+<span class="kw">summary</span>(iris)</code></pre></div>
+<p>Het package <code>skimr</code> moet je eerst installeren.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;hadley/colformat&quot;</span>)
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ropenscilabs/skimr&quot;</span>)
 
-<span class="co"># De levels van kolom 'type' uit mydf</span>
-<span class="kw">levels</span>(mydf<span class="op">$</span>type)
-
-### pas op met characters die worden standaard in data.frame naar factors omgezet
-x4
-<span class="kw">class</span>(x4)
-<span class="kw">class</span>(df1<span class="op">$</span>type)
-
-mydf =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">kolomnaampj1 =</span> x1, <span class="dt">income =</span> x2, <span class="dt">age=</span>x3, <span class="dt">type =</span> x4, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-mydf
-<span class="kw">class</span>(mydf<span class="op">$</span>type)
-
-## Dit is ook in de Environment viewer te zien</code></pre></div>
+<span class="kw">library</span>(skimr)
+skimr<span class="op">::</span><span class="kw">skim</span>(mtcars)
+<span class="kw">skim</span>(iris)</code></pre></div>
 <p>Je kan net als bij matrices subscripts gebruiken in data frame om bepaalde data uit een data.frame te halen</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df1[<span class="dv">1</span>,<span class="dv">3</span>]
 df1[<span class="dv">11</span><span class="op">:</span><span class="dv">20</span>,]
@@ -639,16 +643,6 @@ df1[,<span class="dv">1</span>]
 
 tb1[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]
 tb1[,<span class="dv">1</span>]</code></pre></div>
-<p>Om een eerste indruk te krijgen van wat er in een data.frame zit kan je <code>summary</code> of <code>skimr</code> gebruiken</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mtcars)
-<span class="kw">summary</span>(iris)</code></pre></div>
-<p>Het package <code>skimr</code> moet je eerst installeren.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;hadley/colformat&quot;</span>)
-devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ropenscilabs/skimr&quot;</span>)
-
-<span class="kw">library</span>(skimr)
-skimr<span class="op">::</span><span class="kw">skim</span>(mtcars)
-<span class="kw">skim</span>(iris)</code></pre></div>
 </div>
 <div id="lists" class="section level2">
 <h2><span class="header-section-number">3.6</span> lists</h2>
@@ -756,7 +750,7 @@ f3 =<span class="st"> </span><span class="cf">function</span>(x)
 <div id="importeren-exporteren-van-data" class="section level1">
 <h1><span class="header-section-number">4</span> Importeren / exporteren van data</h1>
 <hr />
-<p>Als je met R werkt heb je natuurlijk data nodig, zoals we op bovenstaande manier data hebben gemaakt zal het in de praktijk niet gebeuren met echte data sets. Die leven in data bases of in files</p>
+<p>Als je met R werkt heb je natuurlijk data nodig, zoals we op bovenstaande manier data hebben gemaakt zal het in de praktijk niet gebeuren met echte data sets. Die leven in data bases of in files.</p>
 <div id="inlezen-files" class="section level2">
 <h2><span class="header-section-number">4.1</span> Inlezen files</h2>
 <p>Er zijn een aantal packages die handig zijn om files in te lezen.</p>
@@ -832,7 +826,7 @@ x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="fl">1e6</
 <span class="kw">rm</span>(y)
 <span class="kw">mem_used</span>()</code></pre></div>
 <p>Via de ‘Environment’ tab kan je ook per object makkelijk zien hoe groot het is. Verander van ‘List’ view naar ‘Grid’ view.</p>
-<p>EINDE SESSIE</p>
+<p>==== EINDE SESSIE ===</p>
 </div>
 </section>
 
