@@ -121,7 +121,7 @@
     <div id="map"></div>
 
     <div class="controls">
-        <h1>Refuel Savings Map</h1>
+        <h1>Rij voorzichtig naar Duitsland</h1>
 
         <div class="control-group">
             <label for="tank">Tankinhoud (L):</label>
@@ -148,10 +148,25 @@
         </div>
 
         <div class="control-group">
+            <label for="wage">Uurloon (€/u):</label>
+            <div class="slider-container">
+                <input type="range" id="wage" min="0" max="100" step="1" value="25">
+                <span class="value-display" id="wage-val">€25</span>
+            </div>
+        </div>
+
+        <div class="control-group">
             <label for="consumption">Verbruik (L/100km):</label>
             <div class="slider-container">
                 <input type="range" id="consumption" min="3" max="15" step="0.1" value="7.0">
                 <span class="value-display" id="consumption-val">7.0</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Maximale afstand <i>d</i>:</label>
+            <div class="slider-container">
+                <span class="value-display" id="distance-val" style="flex-grow: 1; text-align: center; background: var(--success); color: white; font-size: 1.1rem; padding: 8px;">0.0 km</span>
             </div>
         </div>
 
@@ -194,10 +209,13 @@
                 priceNl: document.getElementById('price-nl'),
                 priceDe: document.getElementById('price-de'),
                 consumption: document.getElementById('consumption'),
+                wage: document.getElementById('wage'),
                 tankVal: document.getElementById('tank-val'),
                 priceNlVal: document.getElementById('price-nl-val'),
                 priceDeVal: document.getElementById('price-de-val'),
-                consumptionVal: document.getElementById('consumption-val')
+                consumptionVal: document.getElementById('consumption-val'),
+                wageVal: document.getElementById('wage-val'),
+                distanceVal: document.getElementById('distance-val')
             };
 
             // 4. Logic
@@ -206,20 +224,29 @@
                 const pNl = parseFloat(elements.priceNl.value);
                 const pDe = parseFloat(elements.priceDe.value);
                 const cons = parseFloat(elements.consumption.value);
+                const wage = parseFloat(elements.wage.value);
+                const speed = 90; // km/h
 
                 // Update text
                 elements.tankVal.textContent = tank + 'L';
                 elements.priceNlVal.textContent = '€' + pNl.toFixed(2);
                 elements.priceDeVal.textContent = '€' + pDe.toFixed(2);
                 elements.consumptionVal.textContent = cons.toFixed(1);
+                elements.wageVal.textContent = '€' + wage;
 
                 // Calculate max one-way distance
-                // Savings = Tank*(pNl-pDe) - (d/100 * cons * pNl) - (d/100 * cons * pDe)
-                // Set savings = 0 => d = [Tank * (pNl-pDe)] / [0.01 * cons * (pNl + pDe)]
+                // Savings = Tank*(pNl-pDe) - Costs_of_Driving
+                // Costs_of_Driving = Costs_Fuel + Costs_Time
+                // Costs_Fuel = (d/100 * cons * pNl) + (d/100 * cons * pDe) = 0.01 * d * cons * (pNl + pDe)
+                // Costs_Time = Time * wage = (2 * d / speed) * wage
+                // Set savings = 0 => Tank * (pNl - pDe) = d * [0.01 * cons * (pNl + pDe) + 2 * wage / speed]
                 let distance = 0;
                 if (pNl > pDe) {
-                    distance = (tank * (pNl - pDe)) / (0.01 * cons * (pNl + pDe));
+                    const denominator = (0.01 * cons * (pNl + pDe)) + (2 * wage / speed);
+                    distance = (tank * (pNl - pDe)) / denominator;
                 }
+
+                elements.distanceVal.textContent = distance.toFixed(1) + ' km';
 
                 savingsLayer.clearLayers();
                 if (distance > 0.1) {
@@ -234,7 +261,7 @@
             }
 
             // 5. Events
-            [elements.tank, elements.priceNl, elements.priceDe, elements.consumption].forEach(el => {
+            [elements.tank, elements.priceNl, elements.priceDe, elements.consumption, elements.wage].forEach(el => {
                 el.addEventListener('input', update);
             });
 
